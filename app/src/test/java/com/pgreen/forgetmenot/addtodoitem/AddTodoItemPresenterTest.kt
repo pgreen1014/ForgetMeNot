@@ -2,16 +2,22 @@ package com.pgreen.forgetmenot.addtodoitem
 
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.whenever
 import com.pgreen.forgetmenot.data.GooglePlaceType
-import com.pgreen.forgetmenot.main.MainActivity
+import com.pgreen.forgetmenot.data.TodoItem
+import com.pgreen.forgetmenot.storage.TodoListStorage
 import junit.framework.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class AddTodoItemPresenterTest {
 
-    val mockView = mock<AddTodoItemContract.View> {  }
-    val presenter = AddTodoItemPresenter(mockView)
+    private val mockStorage = mock<TodoListStorage> {  }
+    private val mockView = mock<AddTodoItemContract.View> {
+        whenever(it.getItemName()).thenReturn("Toothbrush")
+    }
+
+    private val presenter = AddTodoItemPresenter(mockView, mockStorage)
 
     @Test
     fun getGooglePlaceTypes_returns_array_containing_values_of_GooglePlaceType_enum() {
@@ -36,8 +42,31 @@ class AddTodoItemPresenterTest {
     }
 
     @Test
-    fun onCloseMenuButtonClicked_calls_view_moveToActivitywith_MainActivity_target() {
+    fun onCloseMenuButtonClicked_calls_view_moveToActivity_with_MainActivity_target() {
         presenter.onCloseMenuButtonClicked()
         verify(mockView).finishActivity()
+    }
+
+    @Test
+    fun onSaveItemButtonClicked_stores_TodoItem_with_item_from_view() {
+        presenter.onGooglePlaceItemChecked(GooglePlaceType.CONVENIENCE_STORE, true)
+        presenter.onGooglePlaceItemChecked(GooglePlaceType.GAS_STATION, true)
+        presenter.onGooglePlaceItemChecked(GooglePlaceType.HOME_GOODS_STORE, true)
+        presenter.onSaveItemButtonClicked()
+
+        val expectedItem = TodoItem("Toothbrush",
+                setOf(GooglePlaceType.CONVENIENCE_STORE, GooglePlaceType.GAS_STATION, GooglePlaceType.HOME_GOODS_STORE))
+        verify(mockStorage).saveNewTodoItem(expectedItem)
+    }
+
+    @Test
+    fun onGooglePlaceItemChecked_with_false_input_will_remove_previously_set_GooglePlace() {
+        presenter.onGooglePlaceItemChecked(GooglePlaceType.ATM, true)
+        presenter.onGooglePlaceItemChecked(GooglePlaceType.BAKERY, true)
+        presenter.onGooglePlaceItemChecked(GooglePlaceType.ATM, false)
+        presenter.onSaveItemButtonClicked()
+
+        val expectedItem = TodoItem("Toothbrush", setOf(GooglePlaceType.BAKERY))
+        verify(mockStorage).saveNewTodoItem(expectedItem)
     }
 }

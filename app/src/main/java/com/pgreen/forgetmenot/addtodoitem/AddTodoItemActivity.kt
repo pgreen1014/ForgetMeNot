@@ -1,6 +1,5 @@
 package com.pgreen.forgetmenot.addtodoitem
 
-import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -10,12 +9,16 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import com.pgreen.forgetmenot.R
+import com.pgreen.forgetmenot.data.GooglePlaceType
 import com.pgreen.forgetmenot.interfaces.ResourceProvider
+import com.pgreen.forgetmenot.storage.TodoListStorage
+import com.pgreen.forgetmenot.storage.TodoListStorageObject
 import kotlinx.android.synthetic.main.activity_add_todo_item.*
 
 class AddTodoItemActivity : AppCompatActivity(), AddTodoItemContract.View, ResourceProvider {
 
-    private val presenter: AddTodoItemContract.Presenter = AddTodoItemPresenter(this)
+    private val storage: TodoListStorage = TodoListStorageObject
+    private val presenter: AddTodoItemContract.Presenter = AddTodoItemPresenter(this, storage)
     private lateinit var googlePlaceItemsRecyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,5 +73,6 @@ class AddTodoItemActivity : AppCompatActivity(), AddTodoItemContract.View, Resou
 
     override fun getStringResource(resourceId: Int): String = getString(resourceId)
 
+    override fun getItemName(): String = add_todo_item_itemName_TextInputEditText.text.toString()
 
 }

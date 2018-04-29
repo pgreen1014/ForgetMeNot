@@ -7,12 +7,13 @@ interface AddTodoItemContract {
     interface View {
         fun showToast(message: String)
         fun finishActivity()
+        fun getItemName(): String
     }
 
     interface Presenter {
         fun getGooglePlaceTypes(): Array<GooglePlaceType>
         fun getGooglePlaceUIStringResourceForPosition(position: Int): Int
-        fun onGooglePlaceItemChecked(isChecked: Boolean)
+        fun onGooglePlaceItemChecked(placeType: GooglePlaceType, isChecked: Boolean)
         fun onSaveItemButtonClicked()
         fun onCloseMenuButtonClicked()
     }

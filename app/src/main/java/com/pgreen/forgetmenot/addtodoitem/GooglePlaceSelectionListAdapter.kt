@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
 import com.pgreen.forgetmenot.R
+import com.pgreen.forgetmenot.data.GooglePlaceType
 import com.pgreen.forgetmenot.interfaces.ResourceProvider
 
 class GooglePlaceSelectionListAdapter(private val resourceProvider: ResourceProvider,
@@ -39,7 +40,9 @@ class GooglePlaceSelectionListAdapter(private val resourceProvider: ResourceProv
             val itemNameResId = presenter.getGooglePlaceUIStringResourceForPosition(position)
             itemNameTextView.text = resourceProvider.getStringResource(itemNameResId)
 
-            selectionCheckBox.setOnCheckedChangeListener { buttonView, isChecked -> presenter.onGooglePlaceItemChecked(isChecked) }
+            selectionCheckBox.setOnCheckedChangeListener { _, isChecked ->
+                presenter.onGooglePlaceItemChecked(GooglePlaceType.values()[position], isChecked)
+            }
         }
     }
 }
