@@ -1,6 +1,7 @@
 package com.pgreen.forgetmenot.data
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Test
 
 class TodoItemTest {
@@ -18,6 +19,14 @@ class TodoItemTest {
         val item = TodoItem("Soap", placeTypes)
 
         assertEquals(placeTypes, item.placeTypes)
+    }
+
+    @Test
+    fun has_unique_identifier() {
+        val placeTypes = setOf(GooglePlaceType.ATM, GooglePlaceType.BEAUTY_SALON)
+        val item = TodoItem("Soap", placeTypes)
+
+        assertNotNull(item.id)
     }
 
 }
