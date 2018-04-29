@@ -6,6 +6,7 @@ interface TodoItemsListContract {
         fun updateTodoItems()
         fun showToast(message: String)
         fun launchAddTodoItemsActivity()
+        fun updateTodoList()
     }
 
     interface Presenter {

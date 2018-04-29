@@ -58,4 +58,8 @@ class TodoItemsListFragment : Fragment(), TodoItemsListContract.View {
         EventBus.getDefault().post(AddTodoItemButtonUIClickEvent())
     }
 
+    override fun updateTodoList() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
 }
