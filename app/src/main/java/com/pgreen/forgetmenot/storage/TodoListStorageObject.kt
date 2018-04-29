@@ -8,20 +8,32 @@ import com.pgreen.forgetmenot.data.TodoItem
 //TODO replace with Room database
 object TodoListStorageObject: TodoListStorage {
 
+    private val todoItems: MutableList<TodoItem> = mutableListOf()
+
     override fun getTodoItems(): List<TodoItem> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return todoItems
     }
 
     override fun saveNewTodoItem(item: TodoItem) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        todoItems.add(item)
     }
 
     override fun updateTodoItem(item: TodoItem) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        for (storedItem: TodoItem in todoItems) {
+            updateItem(storedItem, item)
+        }
+    }
+
+    private fun updateItem(storedItem: TodoItem, updateItem: TodoItem) {
+        if (storedItem.id == updateItem.id) {
+            val storedIndex = todoItems.indexOf(storedItem)
+            todoItems.removeAt(storedIndex)
+            todoItems.add(storedIndex, updateItem)
+        }
     }
 
     override fun deleteTodoItem(item: TodoItem) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        todoItems.remove(item)
     }
 
 }
