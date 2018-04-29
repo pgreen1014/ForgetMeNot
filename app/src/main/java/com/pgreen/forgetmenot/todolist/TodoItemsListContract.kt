@@ -1,20 +1,21 @@
 package com.pgreen.forgetmenot.todolist
 
+import com.pgreen.forgetmenot.data.TodoItem
+
 interface TodoItemsListContract {
 
     interface View {
-        fun updateTodoItems()
         fun showToast(message: String)
-        fun launchAddTodoItemsActivity()
+        fun launchAddTodoItemsActivity(editItem: TodoItem?)
         fun updateTodoList()
     }
 
     interface Presenter {
         fun onAddTodoItemsClicked()
         fun onItemOptionsClicked(itemPosition: Int)
-        fun onDeleteItemClicked()
-        fun onEditItemClicked()
-        fun loadTodoItems()
+        fun onDeleteItemClicked(item: TodoItem)
+        fun onEditItemClicked(item: TodoItem)
+        fun getStoredTodoItems(): List<TodoItem>
     }
 
 }

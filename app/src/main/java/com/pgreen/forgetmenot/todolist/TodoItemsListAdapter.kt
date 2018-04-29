@@ -17,7 +17,7 @@ class TodoItemsListAdapter( val presenter: TodoItemsListContract.Presenter) : Re
     }
 
     override fun getItemCount(): Int {
-        return 10
+        return presenter.getStoredTodoItems().size
     }
 
     override fun onBindViewHolder(holder: ItemHolder, position: Int) {
@@ -31,8 +31,7 @@ class TodoItemsListAdapter( val presenter: TodoItemsListContract.Presenter) : Re
         private val itemOptionsButton: ImageView = itemView.findViewById(R.id.item_todoitem_options_button)
 
         internal fun bindViewHolder(position: Int) {
-            val itemText = "Todo item $position"
-            itemNameTextView.text = itemText
+            itemNameTextView.text = presenter.getStoredTodoItems()[position].name
             itemOptionsButton.setOnClickListener { presenter.onItemOptionsClicked(position) }
         }
 

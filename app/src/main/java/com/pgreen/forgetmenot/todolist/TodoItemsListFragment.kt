@@ -10,14 +10,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.pgreen.forgetmenot.R
+import com.pgreen.forgetmenot.data.TodoItem
 import com.pgreen.forgetmenot.eventbusevents.AddTodoItemButtonUIClickEvent
+import com.pgreen.forgetmenot.storage.TodoListStorageObject
 
 import kotlinx.android.synthetic.main.fragment_todo_items_list.*
 import org.greenrobot.eventbus.EventBus
 
 class TodoItemsListFragment : Fragment(), TodoItemsListContract.View {
 
-    private val presenter: TodoItemsListContract.Presenter = TodoItemsListPresenter(this)
+    private val presenter: TodoItemsListContract.Presenter = TodoItemsListPresenter(this, TodoListStorageObject)
 
     private lateinit var itemsListRecyclerView: RecyclerView
     private lateinit var addItemFAB: FloatingActionButton
@@ -46,20 +48,16 @@ class TodoItemsListFragment : Fragment(), TodoItemsListContract.View {
         itemsListRecyclerView.adapter = todoItemsListAdapter
     }
 
-    override fun updateTodoItems() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     override fun showToast(message: String) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
-    override fun launchAddTodoItemsActivity() {
+    override fun launchAddTodoItemsActivity(editItem: TodoItem?) {
         EventBus.getDefault().post(AddTodoItemButtonUIClickEvent())
     }
 
     override fun updateTodoList() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        itemsListRecyclerView.adapter.notifyDataSetChanged()
     }
 
 }

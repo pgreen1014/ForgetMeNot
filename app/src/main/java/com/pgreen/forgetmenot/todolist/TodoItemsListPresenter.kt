@@ -1,25 +1,30 @@
 package com.pgreen.forgetmenot.todolist
 
-class TodoItemsListPresenter(val view: TodoItemsListContract.View) : TodoItemsListContract.Presenter {
+import com.pgreen.forgetmenot.data.TodoItem
+import com.pgreen.forgetmenot.storage.TodoListStorage
+
+class TodoItemsListPresenter(val view: TodoItemsListContract.View, val storage: TodoListStorage) : TodoItemsListContract.Presenter {
 
     override fun onAddTodoItemsClicked() {
-        view.launchAddTodoItemsActivity()
+        view.launchAddTodoItemsActivity(null)
     }
 
     override fun onItemOptionsClicked(itemPosition: Int) {
         view.showToast("Item $itemPosition clicked!")
     }
 
-    override fun onEditItemClicked() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun onEditItemClicked(item: TodoItem) {
+        view.launchAddTodoItemsActivity(item)
+        view.updateTodoList()
     }
 
-    override fun onDeleteItemClicked() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun onDeleteItemClicked(item: TodoItem) {
+        storage.deleteTodoItem(item)
+        view.updateTodoList()
     }
 
-    override fun loadTodoItems() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun getStoredTodoItems(): List<TodoItem> {
+        return storage.getTodoItems()
     }
 
 }
