@@ -8,6 +8,7 @@ interface TodoItemsListContract {
         fun showToast(message: String)
         fun launchAddTodoItemsActivity(editItem: TodoItem?)
         fun updateTodoList()
+        fun showItemOptionsDialog()
     }
 
     interface Presenter {

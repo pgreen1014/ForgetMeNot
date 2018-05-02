@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">ForgetMeNot</string>
     <string name="save">Save</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
     <string name="google_place_atm">ATM</string>
     <string name="google_place_bakery">Bakery</string>
     <string name="google_place_bank">Bank</string>

@@ -13,11 +13,12 @@ import com.pgreen.forgetmenot.R
 import com.pgreen.forgetmenot.data.TodoItem
 import com.pgreen.forgetmenot.eventbusevents.AddTodoItemButtonUIClickEvent
 import com.pgreen.forgetmenot.storage.TodoListStorageObject
+import com.pgreen.forgetmenot.todolist.itemoptiondialog.ItemOptionsDialogFragment
 
 import kotlinx.android.synthetic.main.fragment_todo_items_list.*
 import org.greenrobot.eventbus.EventBus
 
-class TodoItemsListFragment : Fragment(), TodoItemsListContract.View {
+class TodoItemsListFragment : Fragment(), TodoItemsListContract.View, ItemOptionsDialogFragment.ItemOptionsDialogCallback {
 
     private val presenter: TodoItemsListContract.Presenter = TodoItemsListPresenter(this, TodoListStorageObject)
 
@@ -52,12 +53,27 @@ class TodoItemsListFragment : Fragment(), TodoItemsListContract.View {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
+    override fun showItemOptionsDialog() {
+        val supportFM = activity?.supportFragmentManager
+        val dialog = ItemOptionsDialogFragment()
+        dialog.setTargetFragment(this, 0)
+        dialog.show(fragmentManager, "item_options_dialog")
+    }
+
     override fun launchAddTodoItemsActivity(editItem: TodoItem?) {
         EventBus.getDefault().post(AddTodoItemButtonUIClickEvent())
     }
 
     override fun updateTodoList() {
         itemsListRecyclerView.adapter.notifyDataSetChanged()
+    }
+
+    override fun deleteItemDialogOptionClicked() {
+        showToast("Delete Item Clicked")
+    }
+
+    override fun editItemDialogOptionClicked() {
+        showToast("Edit Item Clicked")
     }
 
 }

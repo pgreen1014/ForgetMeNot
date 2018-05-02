@@ -10,7 +10,8 @@ class TodoItemsListPresenter(val view: TodoItemsListContract.View, val storage: 
     }
 
     override fun onItemOptionsClicked(itemPosition: Int) {
-        view.showToast("Item $itemPosition clicked!")
+//        view.showToast("Item $itemPosition clicked!")
+        view.showItemOptionsDialog()
     }
 
     override fun onEditItemClicked(item: TodoItem) {
