@@ -1,5 +1,6 @@
 package com.pgreen.forgetmenot.todolist
 
+import android.view.View
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
@@ -11,6 +12,7 @@ import org.junit.Test
 
 class TodoListPresenter {
 
+    val mockItemView = mock<View> {  }
     val mockStorage = mock<TodoListStorage> { }
     val mockView = mock<TodoItemsListContract.View> { }
     val presenter = TodoItemsListPresenter(mockView, mockStorage)
@@ -22,9 +24,9 @@ class TodoListPresenter {
     }
 
     @Test
-    fun onItemOptionsClicked_calls_views_toast_function() {
-        presenter.onItemOptionsClicked(1)
-        verify(mockView).showToast("Item 1 clicked!")
+    fun onItemOptionsClicked_calls_views_showItemOptionsDialog() {
+        presenter.onItemOptionsClicked(mockItemView, 1)
+        verify(mockView).showItemOptionsDialog(mockItemView)
     }
 
     @Test

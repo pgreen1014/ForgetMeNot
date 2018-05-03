@@ -32,7 +32,7 @@ class TodoItemsListAdapter( val presenter: TodoItemsListContract.Presenter) : Re
 
         internal fun bindViewHolder(position: Int) {
             itemNameTextView.text = presenter.getStoredTodoItems()[position].name
-            itemOptionsButton.setOnClickListener { presenter.onItemOptionsClicked(position) }
+            itemOptionsButton.setOnClickListener { presenter.onItemOptionsClicked(itemOptionsButton, position) }
         }
 
     }

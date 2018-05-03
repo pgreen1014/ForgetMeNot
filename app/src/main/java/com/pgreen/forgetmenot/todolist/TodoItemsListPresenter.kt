@@ -1,5 +1,6 @@
 package com.pgreen.forgetmenot.todolist
 
+import android.view.View
 import com.pgreen.forgetmenot.data.TodoItem
 import com.pgreen.forgetmenot.storage.TodoListStorage
 
@@ -9,9 +10,8 @@ class TodoItemsListPresenter(val view: TodoItemsListContract.View, val storage: 
         view.launchAddTodoItemsActivity(null)
     }
 
-    override fun onItemOptionsClicked(itemPosition: Int) {
-//        view.showToast("Item $itemPosition clicked!")
-        view.showItemOptionsDialog()
+    override fun onItemOptionsClicked(itemView: View, itemPosition: Int) {
+        view.showItemOptionsDialog(itemView)
     }
 
     override fun onEditItemClicked(item: TodoItem) {
