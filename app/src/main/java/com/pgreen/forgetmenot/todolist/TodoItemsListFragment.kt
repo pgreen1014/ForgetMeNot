@@ -13,7 +13,7 @@ import com.pgreen.forgetmenot.R
 import com.pgreen.forgetmenot.data.TodoItem
 import com.pgreen.forgetmenot.eventbusevents.AddTodoItemButtonUIClickEvent
 import com.pgreen.forgetmenot.storage.TodoListStorageObject
-import com.pgreen.forgetmenot.todolist.itemoptiondialog.ItemOptionsDialogFragment
+import com.pgreen.forgetmenot.todolist.itemoptionmenu.ItemOptionsDialogFragment
 
 import kotlinx.android.synthetic.main.fragment_todo_items_list.*
 import org.greenrobot.eventbus.EventBus
