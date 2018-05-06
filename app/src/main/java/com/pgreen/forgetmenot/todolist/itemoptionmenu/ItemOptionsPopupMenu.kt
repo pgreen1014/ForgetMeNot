@@ -2,8 +2,7 @@ package com.pgreen.forgetmenot.todolist.itemoptionmenu
 
 import android.content.Context
 import android.view.View
-import android.widget.PopupMenu
-import android.widget.Toast
+import android.support.v7.widget.PopupMenu
 import com.pgreen.forgetmenot.R
 
 class ItemOptionsPopupMenu {
