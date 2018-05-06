@@ -10,20 +10,24 @@ import com.pgreen.forgetmenot.storage.TodoListStorage
 import org.greenrobot.eventbus.EventBus
 
 class ItemOptionsPopupMenu(
-        storage: TodoListStorage,
+        private val callback: ItemOptionsPopupMenuCallback,
         private val item: TodoItem
-): ItemOptionsPopupMenuContract.View {
+) {
+
+    interface ItemOptionsPopupMenuCallback{
+        fun onEditItemPopupMenuOptionClicked(item: TodoItem)
+        fun onDeleteItemPopupMenuOptionClicked(item: TodoItem)
+    }
 
     private var popupMenu: PopupMenu? = null
-    private val presenter: ItemOptionsPopupMenuContract.Presenter = ItemOptionsPopupMenuPresenter(this, storage)
 
-    override fun showMenu(context: Context, anchor: View) {
+    fun showMenu(context: Context, anchor: View) {
         popupMenu = PopupMenu(context, anchor)
         popupMenu?.menuInflater?.inflate(R.menu.todo_item_options, popupMenu?.menu)
         popupMenu?.setOnMenuItemClickListener {
              when (it.itemId) {
-                 R.id.todo_item_options_edit    -> presenter.onEditItemOptionClicked(item)
-                 R.id.todo_item_options_delete  -> presenter.onDeleteItemOptionClicked(item)
+                 R.id.todo_item_options_edit    -> callback.onEditItemPopupMenuOptionClicked(item)
+                 R.id.todo_item_options_delete  -> callback.onDeleteItemPopupMenuOptionClicked(item)
             }
             true
         }
@@ -31,11 +35,7 @@ class ItemOptionsPopupMenu(
         popupMenu?.show()
     }
 
-    override fun dismissMenu() {
+    fun dismissMenu() {
         popupMenu?.dismiss()
-    }
-
-    override fun openEditItemView(item: TodoItem) {
-        EventBus.getDefault().post(OpenAddTodoItemActivityEvent(item))
     }
 }

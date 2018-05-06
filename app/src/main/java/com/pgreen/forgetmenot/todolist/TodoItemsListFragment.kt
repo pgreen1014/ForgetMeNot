@@ -18,7 +18,7 @@ import com.pgreen.forgetmenot.todolist.itemoptionmenu.ItemOptionsPopupMenu
 import kotlinx.android.synthetic.main.fragment_todo_items_list.*
 import org.greenrobot.eventbus.EventBus
 
-class TodoItemsListFragment : Fragment(), TodoItemsListContract.View {
+class TodoItemsListFragment : Fragment(), TodoItemsListContract.View, ItemOptionsPopupMenu.ItemOptionsPopupMenuCallback {
 
     private val presenter: TodoItemsListContract.Presenter = TodoItemsListPresenter(this, TodoListStorageObject)
 
@@ -54,7 +54,8 @@ class TodoItemsListFragment : Fragment(), TodoItemsListContract.View {
     }
 
     override fun showItemOptionsDialog(itemView: View, item: TodoItem) {
-        ItemOptionsPopupMenu(TodoListStorageObject, item).showMenu(context!!, itemView)
+        val popupMenu = ItemOptionsPopupMenu(this, item)
+        popupMenu.showMenu(context!!, itemView)
     }
 
     override fun launchAddTodoItemsActivity(editItem: TodoItem?) {
@@ -63,6 +64,14 @@ class TodoItemsListFragment : Fragment(), TodoItemsListContract.View {
 
     override fun updateTodoList() {
         itemsListRecyclerView.adapter.notifyDataSetChanged()
+    }
+
+    override fun onDeleteItemPopupMenuOptionClicked(item: TodoItem) {
+        presenter.onDeleteItemClicked(item)
+    }
+
+    override fun onEditItemPopupMenuOptionClicked(item: TodoItem) {
+        presenter.onEditItemClicked(item)
     }
 
 }
