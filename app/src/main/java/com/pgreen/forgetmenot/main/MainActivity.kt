@@ -5,7 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.pgreen.forgetmenot.R
 import com.pgreen.forgetmenot.addtodoitem.AddTodoItemActivity
-import com.pgreen.forgetmenot.eventbusevents.AddTodoItemButtonUIClickEvent
+import com.pgreen.forgetmenot.eventbusevents.OpenAddTodoItemActivityEvent
 import com.pgreen.forgetmenot.todolist.TodoItemsListFragment
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     @Subscribe
-    fun onAddTodoItemButtonUIClickEvent(event: AddTodoItemButtonUIClickEvent) {
+    fun openAddTodoItemActivity(eventOpenEvent: OpenAddTodoItemActivityEvent) {
         val intent = Intent(this, AddTodoItemActivity::class.java)
         startActivity(intent)
     }

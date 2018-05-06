@@ -11,7 +11,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.pgreen.forgetmenot.R
 import com.pgreen.forgetmenot.data.TodoItem
-import com.pgreen.forgetmenot.eventbusevents.AddTodoItemButtonUIClickEvent
+import com.pgreen.forgetmenot.eventbusevents.OpenAddTodoItemActivityEvent
 import com.pgreen.forgetmenot.storage.TodoListStorageObject
 import com.pgreen.forgetmenot.todolist.itemoptionmenu.ItemOptionsPopupMenu
 
@@ -53,12 +53,12 @@ class TodoItemsListFragment : Fragment(), TodoItemsListContract.View {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
-    override fun showItemOptionsDialog(itemView: View) {
-        ItemOptionsPopupMenu().showMenu(context!!, itemView)
+    override fun showItemOptionsDialog(itemView: View, item: TodoItem) {
+        ItemOptionsPopupMenu(TodoListStorageObject, item).showMenu(context!!, itemView)
     }
 
     override fun launchAddTodoItemsActivity(editItem: TodoItem?) {
-        EventBus.getDefault().post(AddTodoItemButtonUIClickEvent())
+        EventBus.getDefault().post(OpenAddTodoItemActivityEvent(null))
     }
 
     override fun updateTodoList() {

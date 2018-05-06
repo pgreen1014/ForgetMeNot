@@ -10,7 +10,7 @@ import com.pgreen.forgetmenot.storage.TodoListStorage
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class TodoListPresenter {
+class TodoListPresenterTest {
 
     val mockItemView = mock<View> {  }
     val mockStorage = mock<TodoListStorage> { }
@@ -25,8 +25,14 @@ class TodoListPresenter {
 
     @Test
     fun onItemOptionsClicked_calls_views_showItemOptionsDialog() {
+        val returnList = listOf<TodoItem>(
+                TodoItem("Toothbrush", setOf(GooglePlaceType.ATM)),
+                TodoItem("Coffee", setOf(GooglePlaceType.CONVENIENCE_STORE))
+        )
+        whenever(mockStorage.getTodoItems()).thenReturn(returnList)
+
         presenter.onItemOptionsClicked(mockItemView, 1)
-        verify(mockView).showItemOptionsDialog(mockItemView)
+        verify(mockView).showItemOptionsDialog(mockItemView, TodoItem("Coffee", setOf(GooglePlaceType.CONVENIENCE_STORE)))
     }
 
     @Test

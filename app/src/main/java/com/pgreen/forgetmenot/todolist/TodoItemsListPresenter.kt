@@ -11,7 +11,8 @@ class TodoItemsListPresenter(val view: TodoItemsListContract.View, val storage: 
     }
 
     override fun onItemOptionsClicked(itemView: View, itemPosition: Int) {
-        view.showItemOptionsDialog(itemView)
+        val item = getStoredTodoItems()[itemPosition]
+        view.showItemOptionsDialog(itemView, item)
     }
 
     override fun onEditItemClicked(item: TodoItem) {
