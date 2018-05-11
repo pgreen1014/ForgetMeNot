@@ -1,5 +1,7 @@
 package com.pgreen.forgetmenot.data
 
+import android.os.Parcel
+import android.os.Parcelable
 import com.pgreen.forgetmenot.R
 
 /**
@@ -7,7 +9,7 @@ import com.pgreen.forgetmenot.R
  * This Enum is necessary because I could not find an api to get this data. This data will need to be maintained as the
  * list changes.
  */
-enum class GooglePlaceType {
+enum class GooglePlaceType: Parcelable {
     ATM {
         override fun getUIPresentationStringID(): Int = R.string.google_place_atm
     },
@@ -314,4 +316,24 @@ enum class GooglePlaceType {
 
     abstract fun getUIPresentationStringID(): Int
     fun getApiString(): String = this.toString().toLowerCase()
+
+
+
+    companion object CREATOR : Parcelable.Creator<GooglePlaceType> {
+        override fun createFromParcel(source: Parcel): GooglePlaceType {
+            return GooglePlaceType.values()[source.readInt()]
+        }
+
+        override fun newArray(size: Int): Array<GooglePlaceType?> {
+            return arrayOfNulls(size)
+        }
+    }
+
+    override fun writeToParcel(dest: Parcel?, flags: Int) {
+        dest?.writeInt(ordinal)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
 }
