@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     @Subscribe
-    fun openAddTodoItemActivity(eventOpenEvent: OpenAddTodoItemActivityEvent) {
+    fun openAddTodoItemActivity(event: OpenAddTodoItemActivityEvent) {
         val intent = Intent(this, AddTodoItemActivity::class.java)
         startActivity(intent)
     }
