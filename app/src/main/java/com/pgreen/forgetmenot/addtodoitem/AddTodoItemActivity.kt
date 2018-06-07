@@ -9,7 +9,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import com.pgreen.forgetmenot.R
-import com.pgreen.forgetmenot.data.GooglePlaceType
+import com.pgreen.forgetmenot.data.TodoItem
 import com.pgreen.forgetmenot.interfaces.ResourceProvider
 import com.pgreen.forgetmenot.storage.TodoListStorage
 import com.pgreen.forgetmenot.storage.TodoListStorageObject
@@ -21,11 +21,21 @@ class AddTodoItemActivity : AppCompatActivity(), AddTodoItemContract.View, Resou
     private val presenter: AddTodoItemContract.Presenter = AddTodoItemPresenter(this, storage)
     private lateinit var googlePlaceItemsRecyclerView: RecyclerView
 
+    companion object {
+        const val BUNDLE_EDIT_TODO_ITEM = "com.pgree.forgetmenot.addtodoitem.AddTodoItemActivity.edit_todo_item"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_todo_item)
         initToolbar()
         initRecyclerView()
+
+        //TODO handle this correctly
+        if (intent.extras != null) {
+            val editItem = intent.extras.getParcelable<TodoItem>(BUNDLE_EDIT_TODO_ITEM)
+            Toast.makeText(this, editItem.name, Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun initRecyclerView() {

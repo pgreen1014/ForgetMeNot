@@ -59,7 +59,9 @@ class TodoItemsListFragment : Fragment(), TodoItemsListContract.View, ItemOption
     }
 
     override fun launchAddTodoItemsActivity(editItem: TodoItem?) {
-        EventBus.getDefault().post(OpenAddTodoItemActivityEvent(null))
+        val event = if (editItem != null) OpenAddTodoItemActivityEvent(editItem) else OpenAddTodoItemActivityEvent(null)
+
+        EventBus.getDefault().post(event)
     }
 
     override fun updateTodoList() {

@@ -34,6 +34,11 @@ class MainActivity : AppCompatActivity() {
     @Subscribe
     fun openAddTodoItemActivity(event: OpenAddTodoItemActivityEvent) {
         val intent = Intent(this, AddTodoItemActivity::class.java)
+
+        if (event.item != null) {
+            intent.putExtra(AddTodoItemActivity.BUNDLE_EDIT_TODO_ITEM, event.item)
+        }
+
         startActivity(intent)
     }
 }
