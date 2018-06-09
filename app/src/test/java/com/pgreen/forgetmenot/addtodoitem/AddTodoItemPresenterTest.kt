@@ -1,5 +1,6 @@
 package com.pgreen.forgetmenot.addtodoitem
 
+import com.nhaarman.mockito_kotlin.argThat
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
@@ -56,7 +57,10 @@ class AddTodoItemPresenterTest {
 
         val expectedItem = TodoItem("Toothbrush",
                 setOf(GooglePlaceType.CONVENIENCE_STORE, GooglePlaceType.GAS_STATION, GooglePlaceType.HOME_GOODS_STORE))
-        verify(mockStorage).saveNewTodoItem(expectedItem)
+
+        verify(mockStorage).saveNewTodoItem(
+                argThat { name == expectedItem.name && placeTypes == expectedItem.placeTypes }
+        )
     }
 
     @Test
@@ -67,6 +71,9 @@ class AddTodoItemPresenterTest {
         presenter.onSaveItemButtonClicked()
 
         val expectedItem = TodoItem("Toothbrush", setOf(GooglePlaceType.BAKERY))
-        verify(mockStorage).saveNewTodoItem(expectedItem)
+
+        verify(mockStorage).saveNewTodoItem(
+                argThat { name == expectedItem.name && placeTypes == expectedItem.placeTypes }
+        )
     }
 }

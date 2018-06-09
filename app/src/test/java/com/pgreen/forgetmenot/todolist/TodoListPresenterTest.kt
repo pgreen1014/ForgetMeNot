@@ -25,14 +25,16 @@ class TodoListPresenterTest {
 
     @Test
     fun onItemOptionsClicked_calls_views_showItemOptionsDialog() {
+        val todoItem0 = TodoItem("Toothbrush", setOf(GooglePlaceType.ATM))
+        val todoItem1 = TodoItem("Coffee", setOf(GooglePlaceType.CONVENIENCE_STORE))
         val returnList = listOf<TodoItem>(
-                TodoItem("Toothbrush", setOf(GooglePlaceType.ATM)),
-                TodoItem("Coffee", setOf(GooglePlaceType.CONVENIENCE_STORE))
+                todoItem0,
+                todoItem1
         )
         whenever(mockStorage.getTodoItems()).thenReturn(returnList)
 
         presenter.onItemOptionsClicked(mockItemView, 1)
-        verify(mockView).showItemOptionsDialog(mockItemView, TodoItem("Coffee", setOf(GooglePlaceType.CONVENIENCE_STORE)))
+        verify(mockView).showItemOptionsDialog(mockItemView, todoItem1)
     }
 
     @Test
