@@ -35,4 +35,8 @@ class AddTodoItemPresenter(private val view: AddTodoItemContract.View,
         view.finishActivity()
     }
 
+    override fun shouldGooglePlaceTypeBeCheckedForItemEditing(position: Int, editItemPlaceTypes: Set<GooglePlaceType>): Boolean {
+        val placeType = getGooglePlaceTypes()[position]
+        return editItemPlaceTypes.contains(placeType)
+    }
 }

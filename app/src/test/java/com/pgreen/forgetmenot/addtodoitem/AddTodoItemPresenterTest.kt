@@ -8,6 +8,7 @@ import com.pgreen.forgetmenot.data.GooglePlaceType
 import com.pgreen.forgetmenot.data.TodoItem
 import com.pgreen.forgetmenot.storage.TodoListStorage
 import junit.framework.Assert.assertEquals
+import junit.framework.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -75,5 +76,30 @@ class AddTodoItemPresenterTest {
         verify(mockStorage).saveNewTodoItem(
                 argThat { name == expectedItem.name && placeTypes == expectedItem.placeTypes }
         )
+    }
+
+    @Test
+    fun shouldGooglePlaceTypeBeCheckedForItemEditing_returns_true_if_GooglePlaceType_at_position_is_contained_in_editItemPlaces() {
+        val placeType1 = presenter.getGooglePlaceTypes()[0]
+        val placeType2 = presenter.getGooglePlaceTypes()[4]
+        val editItemPlaceTypes = setOf(placeType1, placeType2)
+
+        val result = presenter.shouldGooglePlaceTypeBeCheckedForItemEditing(0, editItemPlaceTypes)
+                && presenter.shouldGooglePlaceTypeBeCheckedForItemEditing(4, editItemPlaceTypes)
+
+        assertTrue("shouldGooglePlaceTypeBeCheckedForItemEditing() should return true if the GooglePlaceType at position is contained in the Set argument",
+                result)
+    }
+
+    @Test
+    fun shouldGooglePlaceTypeBeCheckedForItemEditing_returns_false_if_GooglePlaceType_at_position_is_not_contained_in_editItemPlaces() {
+        val placeType1 = presenter.getGooglePlaceTypes()[0]
+        val placeType2 = presenter.getGooglePlaceTypes()[4]
+        val editItemPlaceTypes = setOf(placeType1, placeType2)
+
+        val result = presenter.shouldGooglePlaceTypeBeCheckedForItemEditing(6, editItemPlaceTypes)
+
+        assertFalse("shouldGooglePlaceTypeBeCheckedForItemEditing() should return false if the GooglePlaceType at position argument is not contained in the Set argument",
+                result)
     }
 }

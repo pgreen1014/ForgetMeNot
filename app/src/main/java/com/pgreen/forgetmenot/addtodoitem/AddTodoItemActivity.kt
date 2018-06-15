@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.TextView
 import android.widget.Toast
 import com.pgreen.forgetmenot.R
 import com.pgreen.forgetmenot.data.TodoItem
@@ -20,28 +21,32 @@ class AddTodoItemActivity : AppCompatActivity(), AddTodoItemContract.View, Resou
     private val storage: TodoListStorage = TodoListStorageObject
     private val presenter: AddTodoItemContract.Presenter = AddTodoItemPresenter(this, storage)
     private lateinit var googlePlaceItemsRecyclerView: RecyclerView
+    private var editItem: TodoItem? = null
 
     companion object {
-        const val BUNDLE_EDIT_TODO_ITEM = "com.pgree.forgetmenot.addtodoitem.AddTodoItemActivity.edit_todo_item"
+        const val BUNDLE_EDIT_TODO_ITEM = "com.pgreen.forgetmenot.addtodoitem.AddTodoItemActivity.edit_todo_item"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_todo_item)
+        extractBundleData()
         initToolbar()
         initRecyclerView()
-
-        //TODO handle this correctly
-        if (intent.extras != null) {
-            val editItem = intent.extras.getParcelable<TodoItem>(BUNDLE_EDIT_TODO_ITEM)
-            Toast.makeText(this, editItem.name, Toast.LENGTH_LONG).show()
-        }
     }
 
     private fun initRecyclerView() {
         googlePlaceItemsRecyclerView = add_todo_item_google_place_selection_recyclerView
         googlePlaceItemsRecyclerView.layoutManager = LinearLayoutManager(this)
-        googlePlaceItemsRecyclerView.adapter = GooglePlaceSelectionListAdapter(this, presenter)
+        googlePlaceItemsRecyclerView.adapter = GooglePlaceSelectionListAdapter(this, presenter, editItem?.placeTypes)
+    }
+
+    private fun extractBundleData() {
+        if (intent.extras != null) {
+            editItem = intent.extras.getParcelable(BUNDLE_EDIT_TODO_ITEM)
+            editItem?.name?.let { setItemName(it) }
+        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -84,5 +89,9 @@ class AddTodoItemActivity : AppCompatActivity(), AddTodoItemContract.View, Resou
     override fun getStringResource(resourceId: Int): String = getString(resourceId)
 
     override fun getItemName(): String = add_todo_item_itemName_TextInputEditText.text.toString()
+
+    override fun setItemName(itemName: String) {
+        add_todo_item_itemName_TextInputEditText.setText(itemName, TextView.BufferType.EDITABLE)
+    }
 
 }
