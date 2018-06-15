@@ -27,6 +27,7 @@ class AddTodoItemPresenter(private val view: AddTodoItemContract.View,
 
     override fun onSaveItemButtonClicked() {
         val item = TodoItem(view.getItemName(), checkedGooglePlaceTypes)
+        //TODO need to updateItem() if editing item
         itemStorage.saveNewTodoItem(item)
         view.finishActivity()
     }
