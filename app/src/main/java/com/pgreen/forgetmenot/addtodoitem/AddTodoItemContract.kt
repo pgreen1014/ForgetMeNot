@@ -1,6 +1,7 @@
 package com.pgreen.forgetmenot.addtodoitem
 
 import com.pgreen.forgetmenot.data.GooglePlaceType
+import com.pgreen.forgetmenot.data.TodoItem
 
 interface AddTodoItemContract {
 
@@ -18,6 +19,8 @@ interface AddTodoItemContract {
         fun onSaveItemButtonClicked()
         fun onCloseMenuButtonClicked()
         fun shouldGooglePlaceTypeBeCheckedForItemEditing(position: Int, editItemPlaceTypes: Set<GooglePlaceType>): Boolean
+        fun setItemToEdit(editItem: TodoItem?)
+        fun getGooglePlaceTypesForEditingItem(): Set<GooglePlaceType>?
     }
 
 }

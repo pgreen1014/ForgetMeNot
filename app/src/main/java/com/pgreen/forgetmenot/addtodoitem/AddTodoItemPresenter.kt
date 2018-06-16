@@ -8,6 +8,7 @@ class AddTodoItemPresenter(private val view: AddTodoItemContract.View,
                            private val itemStorage: TodoListStorage
 ) : AddTodoItemContract.Presenter {
 
+    private var editItem: TodoItem? = null
     private val checkedGooglePlaceTypes: MutableSet<GooglePlaceType> = mutableSetOf()
 
     override fun getGooglePlaceTypes(): Array<GooglePlaceType> = GooglePlaceType.values()
@@ -26,9 +27,16 @@ class AddTodoItemPresenter(private val view: AddTodoItemContract.View,
     }
 
     override fun onSaveItemButtonClicked() {
-        val item = TodoItem(view.getItemName(), checkedGooglePlaceTypes)
-        //TODO need to updateItem() if editing item
-        itemStorage.saveNewTodoItem(item)
+        val itemName = view.getItemName()
+
+        if (editItem != null) {
+            val item = TodoItem(itemName, checkedGooglePlaceTypes, editItem?.id!!)
+            itemStorage.updateTodoItem(item)
+        } else {
+            val item = TodoItem(itemName, checkedGooglePlaceTypes)
+            itemStorage.saveNewTodoItem(item)
+        }
+
         view.finishActivity()
     }
 
@@ -38,6 +46,25 @@ class AddTodoItemPresenter(private val view: AddTodoItemContract.View,
 
     override fun shouldGooglePlaceTypeBeCheckedForItemEditing(position: Int, editItemPlaceTypes: Set<GooglePlaceType>): Boolean {
         val placeType = getGooglePlaceTypes()[position]
-        return editItemPlaceTypes.contains(placeType)
+
+        //TODO Unit Test this
+        val shouldCheck = editItemPlaceTypes.contains(placeType)
+        if (shouldCheck) {
+            checkedGooglePlaceTypes.add(placeType)
+        }
+
+        return shouldCheck
+    }
+
+    override fun setItemToEdit(editItem: TodoItem?) {
+        this.editItem = editItem
+
+        if (editItem != null) {
+            view.setItemName(editItem.name)
+        }
+    }
+
+    override fun getGooglePlaceTypesForEditingItem(): Set<GooglePlaceType>? {
+        return editItem?.placeTypes
     }
 }

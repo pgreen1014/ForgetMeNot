@@ -1,14 +1,12 @@
 package com.pgreen.forgetmenot.addtodoitem
 
-import com.nhaarman.mockito_kotlin.argThat
-import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockito_kotlin.*
 import com.pgreen.forgetmenot.data.GooglePlaceType
 import com.pgreen.forgetmenot.data.TodoItem
 import com.pgreen.forgetmenot.storage.TodoListStorage
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -65,6 +63,43 @@ class AddTodoItemPresenterTest {
     }
 
     @Test
+    fun onSaveItemButtonClicked_does_not_update_item_in_storage_if_adding_new_item() {
+        val expectedItem = TodoItem("Toothbrush",
+                setOf(GooglePlaceType.CONVENIENCE_STORE, GooglePlaceType.GAS_STATION, GooglePlaceType.HOME_GOODS_STORE))
+
+        presenter.onSaveItemButtonClicked()
+
+        verify(mockStorage, never()).updateTodoItem(
+                argThat { name == expectedItem.name && placeTypes == expectedItem.placeTypes }
+        )
+    }
+
+    @Test
+    fun onSaveItemButtonClicked_updates_TodoItem_if_editing_item() {
+        presenter.onGooglePlaceItemChecked(GooglePlaceType.GAS_STATION, true)
+        val editItem = TodoItem("Toothbrush", setOf(GooglePlaceType.GAS_STATION))
+
+        presenter.setItemToEdit(editItem)
+        presenter.onSaveItemButtonClicked()
+
+        verify(mockStorage).updateTodoItem(
+                argThat { name == editItem.name && placeTypes == editItem.placeTypes }
+        )
+    }
+
+    @Test
+    fun onSaveItemButtonClicked_does_not_save_new_item_in_storage_if_editing() {
+        val editItem = TodoItem("Toothbrush", setOf(GooglePlaceType.GAS_STATION))
+
+        presenter.setItemToEdit(editItem)
+        presenter.onSaveItemButtonClicked()
+
+        verify(mockStorage, never()).saveNewTodoItem(
+                argThat { name == editItem.name && placeTypes == editItem.placeTypes }
+        )
+    }
+
+    @Test
     fun onGooglePlaceItemChecked_with_false_input_will_remove_previously_set_GooglePlace() {
         presenter.onGooglePlaceItemChecked(GooglePlaceType.ATM, true)
         presenter.onGooglePlaceItemChecked(GooglePlaceType.BAKERY, true)
@@ -101,5 +136,32 @@ class AddTodoItemPresenterTest {
 
         assertFalse("shouldGooglePlaceTypeBeCheckedForItemEditing() should return false if the GooglePlaceType at position argument is not contained in the Set argument",
                 result)
+    }
+
+    @Test
+    fun setItemToEdit_sets_name_of_editing_item_in_view() {
+        val editItem = TodoItem("Coffee", setOf(GooglePlaceType.GAS_STATION))
+
+        presenter.setItemToEdit(editItem)
+
+        verify(mockView).setItemName(editItem.name)
+    }
+
+    @Test
+    fun getGooglePlaceTypesForEditingItem_returns_GooglePlaceTypes_for_editItem() {
+        val googlePlaces = setOf(GooglePlaceType.ATM, GooglePlaceType.BAKERY)
+        val editItem = TodoItem("Toothbrush", googlePlaces)
+        presenter.setItemToEdit(editItem)
+
+        val result = presenter.getGooglePlaceTypesForEditingItem()
+        assertEquals("Set returned by getGooglePlaceTypesForEditingItem() should equal set in item being edited",
+                googlePlaces, result)
+    }
+
+    @Test
+    fun getGooglePlaceTypesForEditingItem_returns_null_if_no_item_is_being_edited() {
+        val result = presenter.getGooglePlaceTypesForEditingItem()
+
+        assertNull("getGooglePlaceTypesForEditingItem() should return null if no item is being edited", result)
     }
 }
