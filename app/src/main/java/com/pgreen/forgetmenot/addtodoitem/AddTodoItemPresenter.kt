@@ -9,6 +9,7 @@ class AddTodoItemPresenter(private val view: AddTodoItemContract.View,
 ) : AddTodoItemContract.Presenter {
 
     private var editItem: TodoItem? = null
+    private var editItemPosition: Int? = null
     private val checkedGooglePlaceTypes: MutableSet<GooglePlaceType> = mutableSetOf()
 
     override fun getGooglePlaceTypes(): Array<GooglePlaceType> = GooglePlaceType.values()
@@ -31,6 +32,7 @@ class AddTodoItemPresenter(private val view: AddTodoItemContract.View,
 
         if (editItem != null) {
             val item = TodoItem(itemName, checkedGooglePlaceTypes, editItem?.id!!)
+            view.postUpdateItemEvent(editItemPosition!!)
             itemStorage.updateTodoItem(item)
         } else {
             val item = TodoItem(itemName, checkedGooglePlaceTypes)
@@ -56,8 +58,9 @@ class AddTodoItemPresenter(private val view: AddTodoItemContract.View,
         return shouldCheck
     }
 
-    override fun setItemToEdit(editItem: TodoItem?) {
+    override fun setItemToEdit(editItem: TodoItem?, editItemPosition: Int?) {
         this.editItem = editItem
+        this.editItemPosition = editItemPosition
 
         if (editItem != null) {
             view.setItemName(editItem.name)

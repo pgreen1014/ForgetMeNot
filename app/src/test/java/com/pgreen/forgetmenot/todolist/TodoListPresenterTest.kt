@@ -20,7 +20,7 @@ class TodoListPresenterTest {
     @Test
     fun onAddTodoItemsClicked_calls_TodoItemsListContract_Views_launchTodoItemsActivity() {
         presenter.onAddTodoItemsClicked()
-        verify(mockView).launchAddTodoItemsActivity(null)
+        verify(mockView).launchAddTodoItemsActivity(null, null)
     }
 
     @Test
@@ -34,20 +34,20 @@ class TodoListPresenterTest {
         whenever(mockStorage.getTodoItems()).thenReturn(returnList)
 
         presenter.onItemOptionsClicked(mockItemView, 1)
-        verify(mockView).showItemOptionsDialog(mockItemView, todoItem1)
+        verify(mockView).showItemOptionsDialog(mockItemView, todoItem1, 1)
     }
 
     @Test
     fun onEditItemClicked_calls_launchAddTodoItemsActivity_with_TodoItem_argument() {
         val editItem = TodoItem("Toothbrush", setOf(GooglePlaceType.ATM, GooglePlaceType.BAKERY))
-        presenter.onEditItemClicked(editItem)
-        verify(mockView).launchAddTodoItemsActivity(editItem)
+        presenter.onEditItemClicked(editItem, 0)
+        verify(mockView).launchAddTodoItemsActivity(editItem, 0)
     }
 
     @Test
     fun onEditItemClicked_tells_view_to_update_list() {
         val editItem = TodoItem("Toothbrush", setOf(GooglePlaceType.ATM, GooglePlaceType.BAKERY))
-        presenter.onEditItemClicked(editItem)
+        presenter.onEditItemClicked(editItem,0)
         verify(mockView).updateTodoList()
     }
 

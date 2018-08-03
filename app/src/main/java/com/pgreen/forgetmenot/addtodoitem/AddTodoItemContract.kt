@@ -10,6 +10,7 @@ interface AddTodoItemContract {
         fun finishActivity()
         fun getItemName(): String
         fun setItemName(itemName: String)
+        fun postUpdateItemEvent(editItemPosition: Int)
     }
 
     interface Presenter {
@@ -19,7 +20,7 @@ interface AddTodoItemContract {
         fun onSaveItemButtonClicked()
         fun onCloseMenuButtonClicked()
         fun shouldGooglePlaceTypeBeCheckedForItemEditing(position: Int, editItemPlaceTypes: Set<GooglePlaceType>): Boolean
-        fun setItemToEdit(editItem: TodoItem?)
+        fun setItemToEdit(editItem: TodoItem?, editItemPosition: Int?)
         fun getGooglePlaceTypesForEditingItem(): Set<GooglePlaceType>?
     }
 

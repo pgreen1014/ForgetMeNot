@@ -41,6 +41,10 @@ class MainActivity : LoggingAppCompatActivity() {
             intent.putExtra(AddTodoItemActivity.BUNDLE_EDIT_TODO_ITEM, event.item)
         }
 
+        if (event.position != null) {
+            intent.putExtra(AddTodoItemActivity.BUNDLE_EDIT_TODO_ITEM_POSITION, event.position)
+        }
+
         startActivity(intent)
     }
 }

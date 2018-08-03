@@ -11,10 +11,12 @@ import android.widget.Toast
 import com.pgreen.forgetmenot.R
 import com.pgreen.forgetmenot.baseclasses.LoggingAppCompatActivity
 import com.pgreen.forgetmenot.data.TodoItem
+import com.pgreen.forgetmenot.eventbusevents.storage.UpdateItemEvent
 import com.pgreen.forgetmenot.interfaces.ResourceProvider
 import com.pgreen.forgetmenot.storage.TodoListStorage
 import com.pgreen.forgetmenot.storage.TodoListStorageObject
 import kotlinx.android.synthetic.main.activity_add_todo_item.*
+import org.greenrobot.eventbus.EventBus
 
 class AddTodoItemActivity : LoggingAppCompatActivity(), AddTodoItemContract.View, ResourceProvider {
 
@@ -24,6 +26,7 @@ class AddTodoItemActivity : LoggingAppCompatActivity(), AddTodoItemContract.View
 
     companion object {
         const val BUNDLE_EDIT_TODO_ITEM = "com.pgreen.forgetmenot.addtodoitem.AddTodoItemActivity.edit_todo_item"
+        const val BUNDLE_EDIT_TODO_ITEM_POSITION = "com.pgreen.forgetmenot.addtodoitem.AddTodoItemActivity.edit_todo_item_position"
     }
 
     override fun getTAG(): String = "AddTodoItemActivity"
@@ -45,7 +48,8 @@ class AddTodoItemActivity : LoggingAppCompatActivity(), AddTodoItemContract.View
     private fun extractBundleData() {
         if (intent.extras != null) {
             val editItem: TodoItem = intent.extras.getParcelable(BUNDLE_EDIT_TODO_ITEM)
-            presenter.setItemToEdit(editItem)
+            val editItemPosition: Int = intent.extras.getInt(BUNDLE_EDIT_TODO_ITEM_POSITION)
+            presenter.setItemToEdit(editItem, editItemPosition)
         }
 
     }
@@ -93,6 +97,10 @@ class AddTodoItemActivity : LoggingAppCompatActivity(), AddTodoItemContract.View
 
     override fun setItemName(itemName: String) {
         add_todo_item_itemName_TextInputEditText.setText(itemName, TextView.BufferType.EDITABLE)
+    }
+
+    override fun postUpdateItemEvent(editItemPosition: Int) {
+        EventBus.getDefault().post(UpdateItemEvent(editItemPosition))
     }
 
 }

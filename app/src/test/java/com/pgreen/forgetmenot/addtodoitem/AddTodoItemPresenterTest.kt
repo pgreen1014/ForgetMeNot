@@ -79,7 +79,7 @@ class AddTodoItemPresenterTest {
         presenter.onGooglePlaceItemChecked(GooglePlaceType.GAS_STATION, true)
         val editItem = TodoItem("Toothbrush", setOf(GooglePlaceType.GAS_STATION))
 
-        presenter.setItemToEdit(editItem)
+        presenter.setItemToEdit(editItem, 0)
         presenter.onSaveItemButtonClicked()
 
         verify(mockStorage).updateTodoItem(
@@ -91,7 +91,7 @@ class AddTodoItemPresenterTest {
     fun onSaveItemButtonClicked_does_not_save_new_item_in_storage_if_editing() {
         val editItem = TodoItem("Toothbrush", setOf(GooglePlaceType.GAS_STATION))
 
-        presenter.setItemToEdit(editItem)
+        presenter.setItemToEdit(editItem, 0)
         presenter.onSaveItemButtonClicked()
 
         verify(mockStorage, never()).saveNewTodoItem(
@@ -142,7 +142,7 @@ class AddTodoItemPresenterTest {
     fun setItemToEdit_sets_name_of_editing_item_in_view() {
         val editItem = TodoItem("Coffee", setOf(GooglePlaceType.GAS_STATION))
 
-        presenter.setItemToEdit(editItem)
+        presenter.setItemToEdit(editItem, 0)
 
         verify(mockView).setItemName(editItem.name)
     }
@@ -151,7 +151,7 @@ class AddTodoItemPresenterTest {
     fun getGooglePlaceTypesForEditingItem_returns_GooglePlaceTypes_for_editItem() {
         val googlePlaces = setOf(GooglePlaceType.ATM, GooglePlaceType.BAKERY)
         val editItem = TodoItem("Toothbrush", googlePlaces)
-        presenter.setItemToEdit(editItem)
+        presenter.setItemToEdit(editItem, 0)
 
         val result = presenter.getGooglePlaceTypesForEditingItem()
         assertEquals("Set returned by getGooglePlaceTypesForEditingItem() should equal set in item being edited",
@@ -163,5 +163,16 @@ class AddTodoItemPresenterTest {
         val result = presenter.getGooglePlaceTypesForEditingItem()
 
         assertNull("getGooglePlaceTypesForEditingItem() should return null if no item is being edited", result)
+    }
+
+    @Test
+    fun onSaveItemButtonClicked_calls_views_postUpdateItemEvent_with_editItemPosition() {
+        val editItem = TodoItem("Coffee", setOf(GooglePlaceType.GAS_STATION))
+        val editItemPosition = 0
+
+        presenter.setItemToEdit(editItem, editItemPosition)
+        presenter.onSaveItemButtonClicked()
+
+        verify(mockView).postUpdateItemEvent(editItemPosition)
     }
 }

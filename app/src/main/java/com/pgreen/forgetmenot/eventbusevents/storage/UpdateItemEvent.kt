@@ -1,4 +1,4 @@
 package com.pgreen.forgetmenot.eventbusevents.storage
 
-class UpdateItemEvent {
+class UpdateItemEvent(val itemPosition: Int) {
 }
