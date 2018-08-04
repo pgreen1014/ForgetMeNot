@@ -19,7 +19,6 @@ class TodoItemsListPresenter(val view: TodoItemsListContract.View, val storage: 
 
     override fun onEditItemClicked(item: TodoItem, position: Int) {
         view.launchAddTodoItemsActivity(item, position)
-        view.updateTodoList()
     }
 
     override fun onDeleteItemClicked(item: TodoItem) {

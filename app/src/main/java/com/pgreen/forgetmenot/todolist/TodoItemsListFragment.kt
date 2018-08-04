@@ -38,8 +38,8 @@ class TodoItemsListFragment : LoggingSupportFragment(), TodoItemsListContract.Vi
         super.onViewCreated(view, savedInstanceState)
 
         initViews()
-
         initRecyclerView()
+
         addItemFAB.setOnClickListener { presenter.onAddTodoItemsClicked() }
     }
 
