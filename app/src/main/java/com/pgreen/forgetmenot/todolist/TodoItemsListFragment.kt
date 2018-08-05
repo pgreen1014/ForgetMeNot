@@ -13,7 +13,7 @@ import com.pgreen.forgetmenot.baseclasses.LoggingSupportFragment
 import com.pgreen.forgetmenot.data.TodoItem
 import com.pgreen.forgetmenot.eventbusevents.OpenAddTodoItemActivityEvent
 import com.pgreen.forgetmenot.eventbusevents.storage.UpdateItemEvent
-import com.pgreen.forgetmenot.storage.TodoListStorageObject
+import com.pgreen.forgetmenot.storage.local.TodoListStorageObject
 import com.pgreen.forgetmenot.todolist.itemoptionmenu.ItemOptionsPopupMenu
 
 import kotlinx.android.synthetic.main.fragment_todo_items_list.*

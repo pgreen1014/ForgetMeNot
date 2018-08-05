@@ -1,4 +1,4 @@
-package com.pgreen.forgetmenot.storage
+package com.pgreen.forgetmenot.storage.local
 
 import com.pgreen.forgetmenot.data.TodoItem
 
@@ -6,7 +6,7 @@ import com.pgreen.forgetmenot.data.TodoItem
  * Temporary object for storing data and testing presenter and ui interfaces until database is built
  */
 //TODO replace with Room database
-object TodoListStorageObject: TodoListStorage {
+object TodoListStorageObject: TodoListLocalDataSource {
 
     private val todoItems: MutableList<TodoItem> = mutableListOf()
 

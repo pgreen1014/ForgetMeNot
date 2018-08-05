@@ -1,8 +1,8 @@
-package com.pgreen.forgetmenot.storage
+package com.pgreen.forgetmenot.storage.local
 
 import com.pgreen.forgetmenot.data.TodoItem
 
-interface TodoListStorage {
+interface TodoListLocalDataSource {
     fun getTodoItems(): List<TodoItem>
     fun saveNewTodoItem(item: TodoItem)
     fun updateTodoItem(item: TodoItem)

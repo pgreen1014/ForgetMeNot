@@ -3,7 +3,7 @@ package com.pgreen.forgetmenot.addtodoitem
 import com.nhaarman.mockito_kotlin.*
 import com.pgreen.forgetmenot.data.GooglePlaceType
 import com.pgreen.forgetmenot.data.TodoItem
-import com.pgreen.forgetmenot.storage.TodoListStorage
+import com.pgreen.forgetmenot.storage.local.TodoListLocalDataSource
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertFalse
 import org.junit.Assert.assertNull
@@ -12,7 +12,7 @@ import org.junit.Test
 
 class AddTodoItemPresenterTest {
 
-    private val mockStorage = mock<TodoListStorage> {  }
+    private val mockStorage = mock<TodoListLocalDataSource> {  }
     private val mockView = mock<AddTodoItemContract.View> {
         whenever(it.getItemName()).thenReturn("Toothbrush")
     }

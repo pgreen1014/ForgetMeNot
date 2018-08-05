@@ -2,9 +2,9 @@ package com.pgreen.forgetmenot.todolist
 
 import android.view.View
 import com.pgreen.forgetmenot.data.TodoItem
-import com.pgreen.forgetmenot.storage.TodoListStorage
+import com.pgreen.forgetmenot.storage.local.TodoListLocalDataSource
 
-class TodoItemsListPresenter(val view: TodoItemsListContract.View, val storage: TodoListStorage) : TodoItemsListContract.Presenter {
+class TodoItemsListPresenter(val view: TodoItemsListContract.View, val localDataSource: TodoListLocalDataSource) : TodoItemsListContract.Presenter {
 
     private var updatedItemPosition: Int? = null
 
@@ -22,12 +22,12 @@ class TodoItemsListPresenter(val view: TodoItemsListContract.View, val storage: 
     }
 
     override fun onDeleteItemClicked(item: TodoItem) {
-        storage.deleteTodoItem(item)
+        localDataSource.deleteTodoItem(item)
         view.updateTodoList()
     }
 
     override fun getStoredTodoItems(): List<TodoItem> {
-        return storage.getTodoItems()
+        return localDataSource.getTodoItems()
     }
 
     //TODO Unit Test Needed

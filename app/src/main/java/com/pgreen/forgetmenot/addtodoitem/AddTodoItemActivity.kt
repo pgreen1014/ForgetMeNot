@@ -13,15 +13,15 @@ import com.pgreen.forgetmenot.baseclasses.LoggingAppCompatActivity
 import com.pgreen.forgetmenot.data.TodoItem
 import com.pgreen.forgetmenot.eventbusevents.storage.UpdateItemEvent
 import com.pgreen.forgetmenot.interfaces.ResourceProvider
-import com.pgreen.forgetmenot.storage.TodoListStorage
-import com.pgreen.forgetmenot.storage.TodoListStorageObject
+import com.pgreen.forgetmenot.storage.local.TodoListLocalDataSource
+import com.pgreen.forgetmenot.storage.local.TodoListStorageObject
 import kotlinx.android.synthetic.main.activity_add_todo_item.*
 import org.greenrobot.eventbus.EventBus
 
 class AddTodoItemActivity : LoggingAppCompatActivity(), AddTodoItemContract.View, ResourceProvider {
 
-    private val storage: TodoListStorage = TodoListStorageObject
-    private val presenter: AddTodoItemContract.Presenter = AddTodoItemPresenter(this, storage)
+    private val localDataSource: TodoListLocalDataSource = TodoListStorageObject
+    private val presenter: AddTodoItemContract.Presenter = AddTodoItemPresenter(this, localDataSource)
     private lateinit var googlePlaceItemsRecyclerView: RecyclerView
 
     companion object {

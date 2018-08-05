@@ -6,14 +6,14 @@ import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import com.pgreen.forgetmenot.data.GooglePlaceType
 import com.pgreen.forgetmenot.data.TodoItem
-import com.pgreen.forgetmenot.storage.TodoListStorage
+import com.pgreen.forgetmenot.storage.local.TodoListLocalDataSource
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class TodoListPresenterTest {
 
     val mockItemView = mock<View> {  }
-    val mockStorage = mock<TodoListStorage> { }
+    val mockStorage = mock<TodoListLocalDataSource> { }
     val mockView = mock<TodoItemsListContract.View> { }
     val presenter = TodoItemsListPresenter(mockView, mockStorage)
 
@@ -45,13 +45,6 @@ class TodoListPresenterTest {
     }
 
     @Test
-    fun onEditItemClicked_tells_view_to_update_list() {
-        val editItem = TodoItem("Toothbrush", setOf(GooglePlaceType.ATM, GooglePlaceType.BAKERY))
-        presenter.onEditItemClicked(editItem,0)
-        verify(mockView).updateTodoList()
-    }
-
-    @Test
     fun onDeleteItemClicked_deletes_item_from_storage() {
         val deleteItem = TodoItem("Toothbrush", setOf(GooglePlaceType.ATM, GooglePlaceType.BAKERY))
         presenter.onDeleteItemClicked(deleteItem)
@@ -74,7 +67,7 @@ class TodoListPresenterTest {
         whenever(mockStorage.getTodoItems()).thenReturn(returnList)
 
         val result = presenter.getStoredTodoItems()
-        assertEquals("presenter should return list stored in TodoListStorage implementation",
+        assertEquals("presenter should return list stored in TodoListLocalDataSource implementation",
                 returnList, result)
     }
 
