@@ -4,10 +4,34 @@ import com.pgreen.forgetmenot.data.TodoItem
 
 interface TodoItemsDataSource {
 
-   interface LoadTodoItemsCallback {
-      fun onTodoItemsLoaded(items: List<TodoItem>)
-      fun onNoItemsAvailable()
-   }
+    interface LoadItemsCallback {
+       fun onItemsLoaded(items: List<TodoItem>)
+       fun onItemsUnavailable()
+    }
 
-   fun loadTodoItems(callback: LoadTodoItemsCallback)
+    interface GetItemCallback {
+        fun onItemRetrieved(item: TodoItem)
+        fun onItemUnavailable()
+    }
+
+    interface ItemUpdatedCallback {
+        fun onItemUpdated(item: TodoItem)
+        fun onItemUnavailable()
+    }
+
+    interface ItemDeletedCallback {
+        fun onItemDeleted(item: TodoItem)
+        fun onItemUnavailable()
+    }
+
+    interface ItemsDeltedCallback {
+        fun onItemsDeleted()
+        fun onItemsUnavailable()
+    }
+
+    fun loadTodoItems(callback: LoadItemsCallback)
+    fun getItem(id: String, callback: GetItemCallback)
+    fun updateItem(item: TodoItem, callback: ItemUpdatedCallback)
+    fun deleteItem(id: String, callback: ItemDeletedCallback)
+    fun deleteAllItems(callback: ItemsDeltedCallback)
 }
