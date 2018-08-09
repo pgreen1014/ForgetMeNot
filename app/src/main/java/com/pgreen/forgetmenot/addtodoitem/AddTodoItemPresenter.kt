@@ -2,10 +2,10 @@ package com.pgreen.forgetmenot.addtodoitem
 
 import com.pgreen.forgetmenot.data.GooglePlaceType
 import com.pgreen.forgetmenot.data.TodoItem
-import com.pgreen.forgetmenot.storage.local.TodoListLocalDataSource
+import com.pgreen.forgetmenot.storage.TodoItemsDataSource
 
 class AddTodoItemPresenter(private val view: AddTodoItemContract.View,
-                           private val itemLocalDataSource: TodoListLocalDataSource
+                           private val itemsDataSource: TodoItemsDataSource
 ) : AddTodoItemContract.Presenter {
 
     private var editItem: TodoItem? = null
@@ -32,11 +32,28 @@ class AddTodoItemPresenter(private val view: AddTodoItemContract.View,
 
         if (editItem != null) {
             val item = TodoItem(itemName, checkedGooglePlaceTypes, editItem?.id!!)
-            view.postUpdateItemEvent(editItemPosition!!)
-            itemLocalDataSource.updateTodoItem(item)
+
+            itemsDataSource.updateItem(item, object : TodoItemsDataSource.ItemUpdatedCallback {
+                override fun onItemUpdated(item: TodoItem) {
+
+                }
+
+                override fun onItemUnavailable() {
+
+                }
+            })
+
         } else {
             val item = TodoItem(itemName, checkedGooglePlaceTypes)
-            itemLocalDataSource.saveNewTodoItem(item)
+            itemsDataSource.addTodoItem(item, object : TodoItemsDataSource.AddItemCallback {
+                override fun onItemAdded(addedItem: TodoItem) {
+
+                }
+
+                override fun onError() {
+
+                }
+            })
         }
 
         view.finishActivity()

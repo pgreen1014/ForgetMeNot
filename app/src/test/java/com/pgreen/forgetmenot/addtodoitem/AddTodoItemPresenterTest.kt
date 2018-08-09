@@ -3,6 +3,7 @@ package com.pgreen.forgetmenot.addtodoitem
 import com.nhaarman.mockito_kotlin.*
 import com.pgreen.forgetmenot.data.GooglePlaceType
 import com.pgreen.forgetmenot.data.TodoItem
+import com.pgreen.forgetmenot.storage.TodoItemsDataSource
 import com.pgreen.forgetmenot.storage.local.TodoListLocalDataSource
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertFalse
@@ -12,7 +13,7 @@ import org.junit.Test
 
 class AddTodoItemPresenterTest {
 
-    private val mockStorage = mock<TodoListLocalDataSource> {  }
+    private val mockStorage = mock<TodoItemsDataSource> {  }
     private val mockView = mock<AddTodoItemContract.View> {
         whenever(it.getItemName()).thenReturn("Toothbrush")
     }
@@ -57,9 +58,10 @@ class AddTodoItemPresenterTest {
         val expectedItem = TodoItem("Toothbrush",
                 setOf(GooglePlaceType.CONVENIENCE_STORE, GooglePlaceType.GAS_STATION, GooglePlaceType.HOME_GOODS_STORE))
 
-        verify(mockStorage).saveNewTodoItem(
-                argThat { name == expectedItem.name && placeTypes == expectedItem.placeTypes }
-        )
+        verify(mockStorage).addTodoItem(
+                argThat { name == expectedItem.name && placeTypes == expectedItem.placeTypes },
+                any())
+
     }
 
     @Test
@@ -69,8 +71,9 @@ class AddTodoItemPresenterTest {
 
         presenter.onSaveItemButtonClicked()
 
-        verify(mockStorage, never()).updateTodoItem(
-                argThat { name == expectedItem.name && placeTypes == expectedItem.placeTypes }
+        verify(mockStorage, never()).updateItem(
+                argThat { name == expectedItem.name && placeTypes == expectedItem.placeTypes },
+                any()
         )
     }
 
@@ -82,8 +85,9 @@ class AddTodoItemPresenterTest {
         presenter.setItemToEdit(editItem, 0)
         presenter.onSaveItemButtonClicked()
 
-        verify(mockStorage).updateTodoItem(
-                argThat { name == editItem.name && placeTypes == editItem.placeTypes }
+        verify(mockStorage).updateItem(
+                argThat { name == editItem.name && placeTypes == editItem.placeTypes },
+                any()
         )
     }
 
@@ -94,8 +98,9 @@ class AddTodoItemPresenterTest {
         presenter.setItemToEdit(editItem, 0)
         presenter.onSaveItemButtonClicked()
 
-        verify(mockStorage, never()).saveNewTodoItem(
-                argThat { name == editItem.name && placeTypes == editItem.placeTypes }
+        verify(mockStorage, never()).addTodoItem(
+                argThat { name == editItem.name && placeTypes == editItem.placeTypes },
+                any()
         )
     }
 
@@ -108,8 +113,9 @@ class AddTodoItemPresenterTest {
 
         val expectedItem = TodoItem("Toothbrush", setOf(GooglePlaceType.BAKERY))
 
-        verify(mockStorage).saveNewTodoItem(
-                argThat { name == expectedItem.name && placeTypes == expectedItem.placeTypes }
+        verify(mockStorage).addTodoItem(
+                argThat { name == expectedItem.name && placeTypes == expectedItem.placeTypes },
+                any()
         )
     }
 
@@ -165,14 +171,4 @@ class AddTodoItemPresenterTest {
         assertNull("getGooglePlaceTypesForEditingItem() should return null if no item is being edited", result)
     }
 
-    @Test
-    fun onSaveItemButtonClicked_calls_views_postUpdateItemEvent_with_editItemPosition() {
-        val editItem = TodoItem("Coffee", setOf(GooglePlaceType.GAS_STATION))
-        val editItemPosition = 0
-
-        presenter.setItemToEdit(editItem, editItemPosition)
-        presenter.onSaveItemButtonClicked()
-
-        verify(mockView).postUpdateItemEvent(editItemPosition)
-    }
 }

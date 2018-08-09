@@ -9,6 +9,11 @@ interface TodoItemsDataSource {
        fun onItemsUnavailable()
     }
 
+    interface AddItemCallback {
+        fun onItemAdded(addedItem: TodoItem)
+        fun onError()
+    }
+
     interface GetItemCallback {
         fun onItemRetrieved(item: TodoItem)
         fun onItemUnavailable()
@@ -20,18 +25,19 @@ interface TodoItemsDataSource {
     }
 
     interface ItemDeletedCallback {
-        fun onItemDeleted(item: TodoItem)
+        fun onItemDeleted(deletedItem: TodoItem)
         fun onItemUnavailable()
     }
 
-    interface ItemsDeltedCallback {
+    interface ItemsDeletedCallback {
         fun onItemsDeleted()
         fun onItemsUnavailable()
     }
 
     fun loadTodoItems(callback: LoadItemsCallback)
+    fun addTodoItem(item: TodoItem, callback: AddItemCallback)
     fun getItem(id: String, callback: GetItemCallback)
     fun updateItem(item: TodoItem, callback: ItemUpdatedCallback)
     fun deleteItem(id: String, callback: ItemDeletedCallback)
-    fun deleteAllItems(callback: ItemsDeltedCallback)
+    fun deleteAllItems(callback: ItemsDeletedCallback)
 }

@@ -9,6 +9,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
+    <TextView
+        android:id="@+id/fragment_todo_items_no_tasks_available"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_centerHorizontal="true"
+        android:textStyle="italic"
+        android:textSize="18sp"
+        android:text="@string/no_tasks_available"
+        android:visibility="gone"/>
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fragment_todo_items_list_FAB"
         android:layout_width="wrap_content"

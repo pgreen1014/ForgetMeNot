@@ -7,8 +7,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.pgreen.forgetmenot.R
+import com.pgreen.forgetmenot.data.TodoItem
 
-class TodoItemsListAdapter( val presenter: TodoItemsListContract.Presenter) : RecyclerView.Adapter<TodoItemsListAdapter.ItemHolder>() {
+class TodoItemsListAdapter(
+        val presenter: TodoItemsListContract.Presenter,
+        var items: List<TodoItem>) : RecyclerView.Adapter<TodoItemsListAdapter.ItemHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -17,11 +20,16 @@ class TodoItemsListAdapter( val presenter: TodoItemsListContract.Presenter) : Re
     }
 
     override fun getItemCount(): Int {
-        return presenter.getStoredTodoItems().size
+        return items.size
     }
 
     override fun onBindViewHolder(holder: ItemHolder, position: Int) {
         holder.bindViewHolder(position)
+    }
+
+    fun refreshData(newItems: List<TodoItem>) {
+        items = newItems
+        notifyDataSetChanged()
     }
 
 
@@ -31,7 +39,7 @@ class TodoItemsListAdapter( val presenter: TodoItemsListContract.Presenter) : Re
         private val itemOptionsButton: ImageView = itemView.findViewById(R.id.item_todoitem_options_button)
 
         internal fun bindViewHolder(position: Int) {
-            itemNameTextView.text = presenter.getStoredTodoItems()[position].name
+            itemNameTextView.text = items[position].name
             itemOptionsButton.setOnClickListener { presenter.onItemOptionsClicked(itemOptionsButton, position) }
         }
 

@@ -10,7 +10,6 @@ interface AddTodoItemContract {
         fun finishActivity()
         fun getItemName(): String
         fun setItemName(itemName: String)
-        fun postUpdateItemEvent(editItemPosition: Int)
     }
 
     interface Presenter {

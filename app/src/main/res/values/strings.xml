@@ -79,4 +79,5 @@
     <string name="google_place_university">University</string>
     <string name="google_place_veterinary_care">Veterinary Care</string>
     <string name="google_place_zoo">Zoo</string>
+    <string name="no_tasks_available">No Tasks Available</string>
 </resources>

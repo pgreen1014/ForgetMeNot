@@ -1,39 +1,69 @@
 package com.pgreen.forgetmenot.storage.local
 
 import com.pgreen.forgetmenot.data.TodoItem
+import com.pgreen.forgetmenot.storage.TodoItemsDataSource
 
 /**
  * Temporary object for storing data and testing presenter and ui interfaces until database is built
  */
 //TODO replace with Room database
-object TodoListStorageObject: TodoListLocalDataSource {
+object TodoListStorageObject: TodoItemsDataSource {
 
-    private val todoItems: MutableList<TodoItem> = mutableListOf()
+    private val todoItems: MutableMap<String, TodoItem> = mutableMapOf()
 
-    override fun getTodoItems(): List<TodoItem> {
-        return todoItems
-    }
+    override fun loadTodoItems(callback: TodoItemsDataSource.LoadItemsCallback) {
+        val listOfItems = todoItems.values.toList()
 
-    override fun saveNewTodoItem(item: TodoItem) {
-        todoItems.add(item)
-    }
-
-    override fun updateTodoItem(item: TodoItem) {
-        for (storedItem: TodoItem in todoItems) {
-            updateItem(storedItem, item)
+        if (listOfItems.isEmpty()) {
+            callback.onItemsUnavailable()
+        } else {
+            callback.onItemsLoaded(listOfItems)
         }
     }
 
-    private fun updateItem(storedItem: TodoItem, updateItem: TodoItem) {
-        if (storedItem.id == updateItem.id) {
-            val storedIndex = todoItems.indexOf(storedItem)
-            todoItems.removeAt(storedIndex)
-            todoItems.add(storedIndex, updateItem)
+    override fun addTodoItem(item: TodoItem, callback: TodoItemsDataSource.AddItemCallback) {
+        if (todoItems[item.id] != null) {
+            callback.onError()
+        } else {
+            todoItems[item.id] = item
+            callback.onItemAdded(item)
         }
     }
 
-    override fun deleteTodoItem(item: TodoItem) {
-        todoItems.remove(item)
+    override fun getItem(id: String, callback: TodoItemsDataSource.GetItemCallback) {
+        val item = todoItems[id]
+
+        if (item != null) {
+            callback.onItemRetrieved(item)
+        } else {
+            callback.onItemUnavailable()
+        }
     }
 
+    override fun updateItem(item: TodoItem, callback: TodoItemsDataSource.ItemUpdatedCallback) {
+        if (todoItems[item.id] != null) {
+            todoItems[item.id] = item
+            callback.onItemUpdated(item)
+        } else {
+            callback.onItemUnavailable()
+        }
+    }
+
+    override fun deleteItem(id: String, callback: TodoItemsDataSource.ItemDeletedCallback) {
+        val deleteItem = todoItems[id]
+        if (deleteItem != null) {
+            todoItems.remove(id)
+            callback.onItemDeleted(deleteItem)
+        } else {
+            callback.onItemUnavailable()
+        }
+    }
+
+    override fun deleteAllItems(callback: TodoItemsDataSource.ItemsDeletedCallback) {
+        if (todoItems.isEmpty()) {
+            callback.onItemsUnavailable()
+        } else {
+            callback.onItemsDeleted()
+        }
+    }
 }

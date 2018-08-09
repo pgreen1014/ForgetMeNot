@@ -7,9 +7,11 @@ interface TodoItemsListContract {
     interface View {
         fun showToast(message: String)
         fun launchAddTodoItemsActivity(editItem: TodoItem?, position: Int?)
-        fun updateTodoList()
+        fun updateTodoList(items: List<TodoItem>)
         fun showItemOptionsDialog(itemView: android.view.View, item: TodoItem, position: Int)
         fun updateListForPosition(position: Int)
+        fun showNoItemsAvailable()
+        fun showTodoList()
     }
 
     interface Presenter {
@@ -17,8 +19,7 @@ interface TodoItemsListContract {
         fun onItemOptionsClicked(itemView: android.view.View, itemPosition: Int)
         fun onDeleteItemClicked(item: TodoItem)
         fun onEditItemClicked(item: TodoItem, position: Int)
-        fun getStoredTodoItems(): List<TodoItem>
-        fun storePositionOfUpdatedItem(position: Int?)
+        fun getStoredTodoItems()
         fun checkForUpdatedItems()
     }
 

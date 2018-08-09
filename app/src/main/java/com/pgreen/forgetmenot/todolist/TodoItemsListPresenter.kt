@@ -2,19 +2,25 @@ package com.pgreen.forgetmenot.todolist
 
 import android.view.View
 import com.pgreen.forgetmenot.data.TodoItem
-import com.pgreen.forgetmenot.storage.local.TodoListLocalDataSource
+import com.pgreen.forgetmenot.storage.TodoItemsDataSource
 
-class TodoItemsListPresenter(val view: TodoItemsListContract.View, val localDataSource: TodoListLocalDataSource) : TodoItemsListContract.Presenter {
-
-    private var updatedItemPosition: Int? = null
+class TodoItemsListPresenter(val view: TodoItemsListContract.View, private val localDataSource: TodoItemsDataSource) : TodoItemsListContract.Presenter {
 
     override fun onAddTodoItemsClicked() {
         view.launchAddTodoItemsActivity(null, null)
     }
 
     override fun onItemOptionsClicked(itemView: View, itemPosition: Int) {
-        val item = getStoredTodoItems()[itemPosition]
-        view.showItemOptionsDialog(itemView, item, itemPosition)
+        localDataSource.loadTodoItems(object : TodoItemsDataSource.LoadItemsCallback {
+            override fun onItemsLoaded(items: List<TodoItem>) {
+                val item = items[itemPosition]
+                view.showItemOptionsDialog(itemView, item, itemPosition)
+            }
+
+            override fun onItemsUnavailable() {
+
+            }
+        })
     }
 
     override fun onEditItemClicked(item: TodoItem, position: Int) {
@@ -22,25 +28,33 @@ class TodoItemsListPresenter(val view: TodoItemsListContract.View, val localData
     }
 
     override fun onDeleteItemClicked(item: TodoItem) {
-        localDataSource.deleteTodoItem(item)
-        view.updateTodoList()
+        localDataSource.deleteItem(item.id, object : TodoItemsDataSource.ItemDeletedCallback {
+            override fun onItemUnavailable() {
+
+            }
+
+            override fun onItemDeleted(deletedItem: TodoItem) {
+                getStoredTodoItems()
+            }
+        })
     }
 
-    override fun getStoredTodoItems(): List<TodoItem> {
-        return localDataSource.getTodoItems()
+    override fun getStoredTodoItems() {
+        localDataSource.loadTodoItems(object : TodoItemsDataSource.LoadItemsCallback {
+            override fun onItemsLoaded(items: List<TodoItem>) {
+                view.updateTodoList(items)
+                view.showTodoList()
+            }
+
+            override fun onItemsUnavailable() {
+                view.showNoItemsAvailable()
+            }
+        })
     }
 
-    //TODO Unit Test Needed
-    override fun storePositionOfUpdatedItem(position: Int?) {
-        updatedItemPosition = position
-    }
-
-    //TODO Unit Test Needed
+    //TODO load individual items rather than entire list
     override fun checkForUpdatedItems() {
-        if (updatedItemPosition != null) {
-            view.updateListForPosition(updatedItemPosition!!)
-            updatedItemPosition = null
-        }
+        getStoredTodoItems()
     }
 
 }

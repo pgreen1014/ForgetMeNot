@@ -12,18 +12,17 @@ import com.pgreen.forgetmenot.R
 import com.pgreen.forgetmenot.baseclasses.LoggingSupportFragment
 import com.pgreen.forgetmenot.data.TodoItem
 import com.pgreen.forgetmenot.eventbusevents.OpenAddTodoItemActivityEvent
-import com.pgreen.forgetmenot.eventbusevents.storage.UpdateItemEvent
 import com.pgreen.forgetmenot.storage.local.TodoListStorageObject
 import com.pgreen.forgetmenot.todolist.itemoptionmenu.ItemOptionsPopupMenu
 
 import kotlinx.android.synthetic.main.fragment_todo_items_list.*
 import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
 
 class TodoItemsListFragment : LoggingSupportFragment(), TodoItemsListContract.View, ItemOptionsPopupMenu.ItemOptionsPopupMenuCallback {
 
     private val presenter: TodoItemsListContract.Presenter = TodoItemsListPresenter(this, TodoListStorageObject)
 
+    private lateinit var listAdapter: TodoItemsListAdapter
     private lateinit var itemsListRecyclerView: RecyclerView
     private lateinit var addItemFAB: FloatingActionButton
 
@@ -54,9 +53,9 @@ class TodoItemsListFragment : LoggingSupportFragment(), TodoItemsListContract.Vi
     }
 
     private fun initRecyclerView() {
-        itemsListRecyclerView.layoutManager = LinearLayoutManager(activity)
-        val todoItemsListAdapter = TodoItemsListAdapter(presenter)
-        itemsListRecyclerView.adapter = todoItemsListAdapter
+        itemsListRecyclerView.layoutManager = LinearLayoutManager(context)
+        listAdapter = TodoItemsListAdapter(presenter, emptyList())
+        itemsListRecyclerView.adapter = listAdapter
     }
 
     override fun showToast(message: String) {
@@ -74,8 +73,9 @@ class TodoItemsListFragment : LoggingSupportFragment(), TodoItemsListContract.Vi
         EventBus.getDefault().post(event)
     }
 
-    override fun updateTodoList() {
-        itemsListRecyclerView.adapter.notifyDataSetChanged()
+    override fun updateTodoList(items: List<TodoItem>) {
+        listAdapter.refreshData(items)
+        listAdapter.notifyDataSetChanged()
     }
 
     override fun onDeleteItemPopupMenuOptionClicked(item: TodoItem, position: Int) {
@@ -90,9 +90,13 @@ class TodoItemsListFragment : LoggingSupportFragment(), TodoItemsListContract.Vi
         itemsListRecyclerView.adapter.notifyItemChanged(position)
     }
 
-    @Subscribe
-    fun onUpdateItemEvent(event: UpdateItemEvent) {
-        presenter.storePositionOfUpdatedItem(event.itemPosition)
+    override fun showNoItemsAvailable() {
+        itemsListRecyclerView.visibility = View.GONE
+        fragment_todo_items_no_tasks_available.visibility = View.VISIBLE
     }
 
+    override fun showTodoList() {
+        itemsListRecyclerView.visibility = View.VISIBLE
+        fragment_todo_items_no_tasks_available.visibility = View.GONE
+    }
 }
