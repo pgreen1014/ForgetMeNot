@@ -23,6 +23,7 @@ class MainActivity : LoggingAppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        //TODO don't load fragment if its already loaded
         supportFragmentManager.beginTransaction()
                 .add(R.id.activity_main_fragment_container, TodoItemsListFragment())
                 .commit()
